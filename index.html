@@ -1,7 +1,19 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Inditex CI Agent</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .RED { background-color: #ffe5e5; }
+        .YELLOW { background-color: #fff5cc; }
+        .GREEN { background-color: #e5ffe5; }
+    </style>
 </head>
 <body>
 
@@ -9,14 +21,28 @@
 
 <button onclick="loadData()">Run Analysis</button>
 
-<pre id="output"></pre>
+<div id="output"></div>
 
 <script>
 function loadData() {
     fetch('alerts.json')
     .then(response => response.json())
     .then(data => {
-        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        let html = "";
+
+        data.forEach(item => {
+            html += `
+                <div class="card ${item.alert}">
+                    <h2>${item.indicator}</h2>
+                    <p><b>Value:</b> ${item.value}</p>
+                    <p><b>Alert:</b> ${item.alert}</p>
+                    <p><b>Confidence:</b> ${item.confidence}</p>
+                    <p><b>Recommendation:</b> ${item.recommendation}</p>
+                </div>
+            `;
+        });
+
+        document.getElementById('output').innerHTML = html;
     });
 }
 </script>
