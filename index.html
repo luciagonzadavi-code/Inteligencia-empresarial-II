@@ -1,0 +1,25 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Inditex CI Agent</title>
+</head>
+<body>
+
+<h1>Inditex Early Warning Agent</h1>
+
+<button onclick="loadData()">Run Analysis</button>
+
+<pre id="output"></pre>
+
+<script>
+function loadData() {
+    fetch('alerts.json')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    });
+}
+</script>
+
+</body>
+</html>

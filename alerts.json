@@ -1,0 +1,29 @@
+[
+    {
+        "indicator": "Shein basic t-shirt price",
+        "value": 6.51,
+        "n_observations": 7,
+        "alert": "GREEN",
+        "confidence": "LOW",
+        "recommendation": "No immediate action required."
+    },
+    {
+        "indicator": "Shein/Temu EU operational job postings",
+        "value": 7,
+        "n_observations": 17,
+        "relevant_observations": 7,
+        "alert": "GREEN",
+        "confidence": "MEDIUM",
+        "recommendation": "No immediate operational escalation detected."
+    },
+    {
+        "indicator": "EU tariff / customs regulatory status",
+        "value": 4,
+        "core_items": 2,
+        "delayed_core_items": 2,
+        "pending_core_items": 0,
+        "alert": "RED",
+        "confidence": "HIGH",
+        "recommendation": "Delay irreversible Lefties CAPEX commitments and reinforce Zara until regulatory timing is clearer."
+    }
+]
