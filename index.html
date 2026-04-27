@@ -1,242 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inditex Early Warning Intelligence Agent</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      color: #1f2937;
-    }
-
-    header {
-      background: #111827;
-      color: white;
-      padding: 32px 48px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-    }
-
-    header p {
-      margin-top: 10px;
-      color: #d1d5db;
-      max-width: 850px;
-    }
-
-    main {
-      padding: 32px 48px;
-    }
-
-    .button {
-      background: #111827;
-      color: white;
-      border: none;
-      padding: 14px 22px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 24px;
-    }
-
-    .button:hover {
-      background: #374151;
-    }
-
-    .summary {
-      background: white;
-      border-radius: 12px;
-      padding: 22px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .summary h2 {
-      margin-top: 0;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-left: 8px solid #9ca3af;
-    }
-
-    .card.RED {
-      border-left-color: #dc2626;
-    }
-
-    .card.YELLOW {
-      border-left-color: #f59e0b;
-    }
-
-    .card.GREEN {
-      border-left-color: #16a34a;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 12px;
-    }
-
-    .badge.RED {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .badge.YELLOW {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .badge.GREEN {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .metric {
-      font-size: 28px;
-      font-weight: bold;
-      margin: 8px 0 16px;
-    }
-
-    .label {
-      color: #6b7280;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-top: 14px;
-    }
-
-    .recommendation {
-      background: #f9fafb;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 10px;
-      line-height: 1.4;
-    }
-
-    footer {
-      padding: 20px 48px;
-      color: #6b7280;
-      font-size: 13px;
-    }
-  </style>
+    <title>Inditex CI Agent</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .RED { background-color: #ffe5e5; }
+        .YELLOW { background-color: #fff5cc; }
+        .GREEN { background-color: #e5ffe5; }
+    </style>
 </head>
-
 <body>
 
-  <header>
-    <h1>Inditex Early Warning Intelligence Agent</h1>
-    <p>
-      Competitive intelligence prototype monitoring Shein pricing pressure,
-      Shein/Temu operational expansion, and EU regulatory risk to support
-      Inditex’s Lefties strategic decision.
-    </p>
-  </header>
+<h1>Inditex Early Warning Agent</h1>
 
-  <main>
-    <button class="button" onclick="loadData()">Run Intelligence Analysis</button>
+<button onclick="loadData()">Run Analysis</button>
 
-    <div id="summary"></div>
-    <div class="cards" id="cards"></div>
-  </main>
+<pre id="output"></pre>
+<div id="output"></div>
 
-  <footer>
-    Prototype for Corporate Intelligence final project · GitHub Pages deployment
-  </footer>
+<script>
+function loadData() {
+    fetch('alerts.json')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        let html = "";
 
-  <script>
-    function loadData() {
-      fetch('alerts.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Could not load alerts.json");
-          }
-          return response.json();
-        })
-        .then(data => {
-          renderSummary(data);
-          renderCards(data);
-        })
-        .catch(error => {
-          document.getElementById('summary').innerHTML = `
-            <div class="summary">
-              <h2>Error loading data</h2>
-              <p>${error}</p>
-            </div>
-          `;
+        data.forEach(item => {
+            html += `
+                <div class="card ${item.alert}">
+                    <h2>${item.indicator}</h2>
+                    <p><b>Value:</b> ${item.value}</p>
+                    <p><b>Alert:</b> ${item.alert}</p>
+                    <p><b>Confidence:</b> ${item.confidence}</p>
+                    <p><b>Recommendation:</b> ${item.recommendation}</p>
+                </div>
+            `;
         });
-    }
 
-    function renderSummary(data) {
-      const redAlerts = data.filter(item => item.alert === "RED").length;
-      const yellowAlerts = data.filter(item => item.alert === "YELLOW").length;
-      const greenAlerts = data.filter(item => item.alert === "GREEN").length;
-
-      let overallStatus = "GREEN";
-      let executiveMessage = "No critical competitive warning detected.";
-
-      if (redAlerts > 0) {
-        overallStatus = "RED";
-        executiveMessage = "Critical warning detected. Management review is recommended before scaling Lefties investment.";
-      } else if (yellowAlerts > 0) {
-        overallStatus = "YELLOW";
-        executiveMessage = "Moderate warning detected. Continue monitoring before making irreversible commitments.";
-      }
-
-      document.getElementById('summary').innerHTML = `
-        <div class="summary">
-          <h2>Executive Summary</h2>
-          <span class="badge ${overallStatus}">${overallStatus} OVERALL STATUS</span>
-          <p>${executiveMessage}</p>
-          <p><b>Signals monitored:</b> ${data.length}</p>
-          <p><b>Red alerts:</b> ${redAlerts} · <b>Yellow alerts:</b> ${yellowAlerts} · <b>Green alerts:</b> ${greenAlerts}</p>
-        </div>
-      `;
-    }
-
-    function renderCards(data) {
-      let html = "";
-
-      data.forEach(item => {
-        html += `
-          <div class="card ${item.alert}">
-            <span class="badge ${item.alert}">${item.alert} ALERT</span>
-            <h2>${item.indicator}</h2>
-
-            <div class="label">Observed value</div>
-            <div class="metric">${item.value}</div>
-
-            <div class="label">Confidence</div>
-            <p><b>${item.confidence}</b></p>
-
-            <div class="label">Strategic recommendation</div>
-            <div class="recommendation">${item.recommendation}</div>
-          </div>
-        `;
-      });
-
-      document.getElementById('cards').innerHTML = html;
-    }
-  </script>
-
-</body>
-</html>
+        document.getElementById('output').innerHTML = html;
+    });
+}
+</script>
